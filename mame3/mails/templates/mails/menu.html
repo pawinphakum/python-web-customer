@@ -1,0 +1,13 @@
+{% load static %}
+{% load mails_extras %}
+{% load l10n %}
+<link rel="stylesheet" type="text/css" href="{% static 'mails/style.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{% static 'mails/script.js' %}"></script>
+<ul>
+  <li><a class="{% if active_tab == 'A' %}active{% endif %}" href="{% url 'mails:index' %}">สร้างลูกค้า</a></li>
+  <li><a class="{% if active_tab == 'B' %}active{% endif %}" href="{% url 'mails:search' %}">รายชื่อลูกค้า</a></li>
+  <li><a class="{% if active_tab == 'C' %}active{% endif %}" href="#chart">ชาร์ต</a></li>
+  <li><a class="{% if active_tab == 'D' %}active{% endif %}" href="#about">ทำไมลอย</a></li>
+  <li style="float:right"><a class="{% if active_tab == 'Z' %}active{% endif %}" href="#about">อะเบาส์</a></li>
+</ul>

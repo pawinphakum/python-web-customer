@@ -1,0 +1,191 @@
+{% load static %}
+{% load mails_extras %}
+{% load l10n %}
+{% include "mails/menu.html" with active_tab='A' %}
+<br>
+รายการประจำวันที่ <span id='id_datedisp'></span> = <span class="sumList">{% if car_list %}{{ car_list.count }}{% else %}0{% endif %}</span>
+<form action="{% url 'mails:index' %}" method="POST">
+  {% csrf_token %}
+  <div class="divLEFT">
+    <div class="divTable">
+      <br>
+  		<div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.name.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.name }}&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="button" id="id_checkname" value=" check " disp="id_checknamedisp">
+        </div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.addr.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.addr }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.soi.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.soi }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.road.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.road }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.moo.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.moo }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.tumbon.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.tumbon }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.amphur.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.amphur }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.province.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.province }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.postcode.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.postcode }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ form.postcode.errors }}
+        </div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.tel.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.tel }}&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="helptext">{{ form.tel.help_text }}</div>
+          {{ form.tel.errors }}
+        </div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;ทะเบียน</div>
+  			<div class="divTableCell">&nbsp;
+          {{ form.car_alphabet }}&nbsp;
+          {{ form.car_number }}&nbsp;
+          {{ form.car_province }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ form.car_number.errors }}
+        </div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;ประเภท</div>
+  			<div class="divTableCell">&nbsp;
+          {% for radio in form.car_type %}
+            {{ radio }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {% endfor %}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;รายการ</div>
+  			<div class="divTableCell">&nbsp;
+          {{ form.is_tro }}&nbsp;{{ form.is_tro.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ form.is_insure }}&nbsp;{{ form.is_insure.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ form.is_paytax }}&nbsp;{{ form.is_paytax.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ form.is_special }}&nbsp;{{ form.is_special.label }}
+        </div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;จดหมาย</div>
+  			<div class="divTableCell">&nbsp;
+          {{ form.is_sms }}&nbsp;{{ form.is_sms.label }}</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;{{ form.expire_date.label }}</div>
+  			<div class="divTableCell">&nbsp;{{ form.expire_date }}&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="helptext">{{ form.expire_date.help_text }}</div>
+          {{ form.expire_date.errors }}
+        </div>
+  		</div>
+      <div class="divTableRow">
+        <div class="divTableCell">&nbsp;</div>
+        <div class="divTableCell">&nbsp;{{ form.remark.label }}</div>
+        <div class="divTableCell">&nbsp;{{ form.remark }}</div>
+      </div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;</div>
+  		</div>
+      <div class="divTableRow">
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;</div>
+  			<div class="divTableCell">&nbsp;<input type="submit" value=" บันทึก " /></div>
+  		</div>
+      <br>
+  </div>
+  </div>
+  <div class="divCENTER">
+  </div>
+  <div class="divRIGHT">
+    <div class="chkSIDE"></div>
+    <div class="chkCENTER">
+      <br>
+      <div id="id_checknamedisp">
+      </div>
+    </div>
+    <div class="chkSIDE"></div>
+  </div>
+</form>
+<div class="divTable blueTable">
+  <div class="divTableHeading">
+    <div class="divTableRow">
+      <div class="divTableHead head1">#</div>
+      <div class="divTableHead head2">ชื่อ นามสกุล</div>
+      <div class="divTableHead head3">ที่อยู่</div>
+      <div class="divTableHead head4">SMS</div>
+      <div class="divTableHead head5">เลขทะเบียน</div>
+      <div class="divTableHead head6">ประเภทรถ</div>
+      <div class="divTableHead head7">รายการ</div>
+      <div class="divTableHead head8">วันสิ้นอายุภาษี</div>
+    </div>
+  </div>
+  <div class="divTableBody">
+    {% if car_list %}
+      {% for car in car_list %}
+        <div class="divTableRow">
+          <div class="divTableCell">{{ forloop.counter }}</div>
+          <div class="divTableCell cellALeft">{{ car.customer.name }}</div>
+          <div class="divTableCell cellALeft">
+            {{ car.customer.addr }}
+            {{ car.customer.soi|preaddr:'ซ.' }}
+            {{ car.customer.road|preaddr:'ถ.' }}
+            {{ car.customer.moo|preaddr:'ม.' }}
+            {{ car.customer.tumbon|preaddr:'ต.' }}
+            {{ car.customer.amphur|preaddr:'อ.' }}
+            {{ car.customer.province|preaddr:'จ.' }}
+            {{ car.customer.postcode }}
+          </div>
+          <div class="divTableCell">{{ car.customer.tel }}</div>
+          <div class="divTableCell">{{ car.car_alphabet }} {{ car.car_number }} {{ car.car_province }}</div>
+          <div class="divTableCell">รย.{{ car.car_type }}</div>
+          <div class="divTableCell">
+            {{ car.is_tro|yesno:'ตรอ&#44;&nbsp;,'|safe }}
+            {{ car.is_insure|yesno:'พรบ&#44;&nbsp;,'|safe }}
+            {{ car.is_paytax|yesno:'ต่อภาษี&#44;&nbsp;,'|safe }}
+            {{ car.is_special|yesno:'นอกรายการ&#44;&nbsp;,'|safe }}
+          </div>
+          <div class="divTableCell">{{ car.expire_date|thaidate }}</div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% if not car_list %}
+<div class="noList">ไม่มีรายการ</div>
+{% endif %}
+
+<!--script src="https://code.jquery.com/jquery-3.2.1.min.js"></script-->
+
+<script src="{% static 'mails/script2.js' %}"></script>
