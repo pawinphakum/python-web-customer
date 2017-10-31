@@ -200,6 +200,7 @@ class SearchView(FormView):
             return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form, **kwargs):
+        car_result = Car.objects.none()
         search = form.cleaned_data['search']
         search = search.strip()
         print('search:'+search+':')
@@ -210,13 +211,15 @@ class SearchView(FormView):
 
         if(byCarNumber.match(search)):
             print('byCarNumber')
+            car_result = Car.objects.filter(car_number=search)
         elif(byName.match(search)):
             print('byName')
+            car_result = Car.objects.filter(customer__name__contains=search)
         elif(byUpdateDate.match(search)):
             print('byUpdateDate')
         else:
             print('no match')
 
         context = self.get_context_data(**kwargs)
-        context['car_list'] = Car.objects.filter(car_number=search)
+        context['car_list'] = car_result
         return self.render_to_response(context)
