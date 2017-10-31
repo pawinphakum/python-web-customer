@@ -10,7 +10,8 @@ from django.core import serializers
 import json
 from .models import Customer, Car, MailHistory
 from .forms import CustomerCarForm, SearchForm
-import json
+import re
+
 # Create your views here.
 # def index(request):
 #    return HttpResponse('Hello World')
@@ -200,12 +201,21 @@ class SearchView(FormView):
 
     def form_valid(self, form, **kwargs):
         search = form.cleaned_data['search']
-
+        search = search.strip()
+        print('search:'+search+':')
         #regex
+        byCarNumber = re.compile('^[0-9]{1,4}$')
+        byName = re.compile('^\D+$')
+        byUpdateDate = re.compile('^[0-9]{6}$')
 
-
-
-
+        if(byCarNumber.match(search)):
+            print('byCarNumber')
+        elif(byName.match(search)):
+            print('byName')
+        elif(byUpdateDate.match(search)):
+            print('byUpdateDate')
+        else:
+            print('no match')
 
         context = self.get_context_data(**kwargs)
         context['car_list'] = Car.objects.filter(car_number=search)
