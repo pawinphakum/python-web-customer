@@ -19,8 +19,6 @@ import re
 def checkname(request):
     fullname = request.GET.get('fullname', None)
     remark = request.GET.get('remark', None)
-    #print(fullname)
-    #print(remark)
     customer = Customer.objects.filter(name=fullname)
     response_data = {}
     if(customer):
@@ -102,6 +100,7 @@ class CustomerCarView(FormView):
                 car.is_sms = is_sms
                 # html input '251161' > form class '2061-11-25' > db date -43 years
                 car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
+                car.update_date = self.nowdate
                 car.customer = customer
                 print('Update Car')
                 car.save()
