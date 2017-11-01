@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.utils import timezone
-from datetime import date
+#from datetime import date
+import datetime
 from django.core import serializers
 import json
 from .models import Customer, Car, MailHistory
@@ -26,7 +27,6 @@ def checkname(request):
         response_data['customer'] = json.loads(serializers.serialize('json', customer))
         response_data['car_list'] = json.loads(serializers.serialize('json', car_list))
     return JsonResponse(response_data)
-
 
 class CustomerCarView(FormView):
     template_name = 'mails/customercar.html'
@@ -216,6 +216,10 @@ class SearchView(FormView):
             car_result = Car.objects.filter(customer__name__contains=search).select_related('customer')
         elif(byUpdateDate.match(search)):
             print('byUpdateDate')
+            year = 2017
+            month = 10
+            day = 28
+            car_result = Car.objects.filter(update_date__date=datetime.date(year, month, day)).select_related('customer')
         else:
             print('no match')
 
