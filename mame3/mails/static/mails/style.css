@@ -2,7 +2,9 @@
   color:red;
   font-style: italic;
   font-size: 14px;
-  display: inline-block;
+  display: inline-flex;
+  border: 0px;
+  background-color: rgba(192, 192, 192, 0.2);
 }
 
 .helptext{

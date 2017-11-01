@@ -145,6 +145,7 @@ class CustomerCarView(FormView):
                 car.is_sms = is_sms
                 # html input '251161' > form class '2061-11-25' > db date -43 years
                 car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
+                car.customer = customer
                 print('Update Car')
                 car.save()
                 mHistory = MailHistory()
@@ -170,8 +171,29 @@ class CustomerCarView(FormView):
             customer.remark = remark
             customer.save()
 
-            print('New Car')
-            newCar(customer)
+            car = Car.objects.filter(
+                car_alphabet__exact=car_alphabet,
+                car_number__exact=car_number,
+                car_province__exact=car_province).first()
+            if car:
+                print('Exist Car')
+                car.car_type = car_type
+                car.is_tro = is_tro
+                car.is_insure = is_insure
+                car.is_paytax = is_paytax
+                car.is_special = is_special
+                car.is_sms = is_sms
+                # html input '251161' > form class '2061-11-25' > db date -43 years
+                car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
+                car.customer = customer
+                print('Update Car')
+                car.save()
+                mHistory = MailHistory()
+                mHistory.car = car
+                mHistory.save()
+            else:
+                print('New Car')
+                newCar(customer)
 
         return super(CustomerCarView, self).form_valid(form)
 
