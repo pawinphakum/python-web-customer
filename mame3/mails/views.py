@@ -19,8 +19,8 @@ import re
 def checkname(request):
     fullname = request.GET.get('fullname', None)
     remark = request.GET.get('remark', None)
-    print(fullname)
-    print(remark)
+    #print(fullname)
+    #print(remark)
     customer = Customer.objects.filter(name=fullname)
     response_data = {}
     if(customer):
@@ -41,7 +41,7 @@ class CustomerCarView(FormView):
     def get_context_data(self, **kwargs):
         context = super(CustomerCarView, self).get_context_data(**kwargs)
         context['nowdate'] = self.nowdate
-        context['car_list'] = Car.objects.filter(update_date__gt=self.nowdate.date())
+        context['car_list'] = Car.objects.filter(update_date__gt=self.nowdate.date()).select_related('customer')
         return context
 
 
@@ -87,6 +87,30 @@ class CustomerCarView(FormView):
             mHistory.car = car
             mHistory.save()
 
+        def updateCar(car_alphabet, car_number, car_province, customer):
+            car = Car.objects.filter(
+                car_alphabet__exact=car_alphabet,
+                car_number__exact=car_number,
+                car_province__exact=car_province).first()
+            if car:
+                print('Exist Car')
+                car.car_type = car_type
+                car.is_tro = is_tro
+                car.is_insure = is_insure
+                car.is_paytax = is_paytax
+                car.is_special = is_special
+                car.is_sms = is_sms
+                # html input '251161' > form class '2061-11-25' > db date -43 years
+                car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
+                car.customer = customer
+                print('Update Car')
+                car.save()
+                mHistory = MailHistory()
+                mHistory.car = car
+                mHistory.save()
+            else:
+                print('New Car')
+                newCar(customer)
 
         # customer = Customer.objects.get(name=name) # Single Object , try , catch
         # customer = Customer.objects.filter(name__exact=name) # List Objects , List , None
@@ -129,31 +153,7 @@ class CustomerCarView(FormView):
                 print('Update Customer')
                 customer.save()
 
-            #-------------------------------------------
-
-            car = Car.objects.filter(
-                car_alphabet__exact=car_alphabet,
-                car_number__exact=car_number,
-                car_province__exact=car_province).first()
-            if car:
-                print('Exist Car')
-                car.car_type = car_type
-                car.is_tro = is_tro
-                car.is_insure = is_insure
-                car.is_paytax = is_paytax
-                car.is_special = is_special
-                car.is_sms = is_sms
-                # html input '251161' > form class '2061-11-25' > db date -43 years
-                car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
-                car.customer = customer
-                print('Update Car')
-                car.save()
-                mHistory = MailHistory()
-                mHistory.car = car
-                mHistory.save()
-            else:
-                print('New Car')
-                newCar(customer)
+            updateCar(car_alphabet, car_number, car_province, customer)
 
         else:
             print('New Customer')
@@ -171,29 +171,7 @@ class CustomerCarView(FormView):
             customer.remark = remark
             customer.save()
 
-            car = Car.objects.filter(
-                car_alphabet__exact=car_alphabet,
-                car_number__exact=car_number,
-                car_province__exact=car_province).first()
-            if car:
-                print('Exist Car')
-                car.car_type = car_type
-                car.is_tro = is_tro
-                car.is_insure = is_insure
-                car.is_paytax = is_paytax
-                car.is_special = is_special
-                car.is_sms = is_sms
-                # html input '251161' > form class '2061-11-25' > db date -43 years
-                car.expire_date = date(expire_date.year-43, expire_date.month, expire_date.day)
-                car.customer = customer
-                print('Update Car')
-                car.save()
-                mHistory = MailHistory()
-                mHistory.car = car
-                mHistory.save()
-            else:
-                print('New Car')
-                newCar(customer)
+            updateCar(car_alphabet, car_number, car_province, customer)
 
         return super(CustomerCarView, self).form_valid(form)
 
@@ -233,15 +211,16 @@ class SearchView(FormView):
 
         if(byCarNumber.match(search)):
             print('byCarNumber')
-            car_result = Car.objects.filter(car_number=search)
+            car_result = Car.objects.filter(car_number=search).select_related('customer')
         elif(byName.match(search)):
             print('byName')
-            car_result = Car.objects.filter(customer__name__contains=search)
+            car_result = Car.objects.filter(customer__name__contains=search).select_related('customer')
         elif(byUpdateDate.match(search)):
             print('byUpdateDate')
         else:
             print('no match')
 
+        print(car_result.query)
         context = self.get_context_data(**kwargs)
         context['car_list'] = car_result
         return self.render_to_response(context)
