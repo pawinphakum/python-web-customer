@@ -20,6 +20,16 @@
     </div>
   </div>
 </form>
+
+{{ searchCondtionWord }}
+<span class="search-condition">
+{% if searchCondtionIndex == 2 %}
+    {{ searchByUpdateDate|thaidate }}
+{% else %}
+    {{ searchWord }}
+{% endif %}
+</span>
+
 <div class="divTable blueTable">
   <div class="divTableHeading">
     <div class="divTableRow">

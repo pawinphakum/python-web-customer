@@ -180,10 +180,11 @@ class SearchView(FormView):
     #success_url = reverse_lazy('mails:search')
 
     # initial context
-    #def get_context_data(self, **kwargs):
+    #nowdate = timezone.now()
+    # def get_context_data(self, **kwargs):
     #    print('get_context_data')
     #    context = super(SearchView, self).get_context_data(**kwargs)
-    #    context['myname'] = 'jesper'
+    #    context['searchByUpdateDate'] = self.nowdate
     #    return context
 
     def get(self, request, *args, **kwargs):
@@ -202,6 +203,9 @@ class SearchView(FormView):
         car_result = Car.objects.none()
         search = form.cleaned_data['search']
         search = search.strip()
+        searchCondtionIndex = 0
+        d = ''
+        words = ['เลขทะเบียน = ', 'ชื่อ = ', 'วันที่สร้างลูกค้า = ']
         print('search:'+search+':')
         #regex
         byCarNumber = re.compile('^[0-9]{1,4}$')
@@ -210,20 +214,28 @@ class SearchView(FormView):
 
         if(byCarNumber.match(search)):
             print('byCarNumber')
-            car_result = Car.objects.filter(car_number=search).select_related('customer')
+            car_result = Car.objects.filter(car_number__contains=search).select_related('customer')
+            searchCondtionIndex = 0
         elif(byName.match(search)):
             print('byName')
             car_result = Car.objects.filter(customer__name__contains=search).select_related('customer')
+            searchCondtionIndex = 1
         elif(byUpdateDate.match(search)):
             print('byUpdateDate')
-            year = 2017
-            month = 10
-            day = 28
-            car_result = Car.objects.filter(update_date__date=datetime.date(year, month, day)).select_related('customer')
+            year = int(search[-2:]) + 1957
+            month = int(search[2:-2])
+            day = int(search[:2])
+            d = datetime.date(year, month, day)
+            car_result = Car.objects.filter(update_date__date=d).select_related('customer')
+            searchCondtionIndex = 2
         else:
             print('no match')
 
-        print(car_result.query)
+        #print(car_result.query)
         context = self.get_context_data(**kwargs)
         context['car_list'] = car_result
+        context['searchCondtionIndex'] = searchCondtionIndex
+        context['searchCondtionWord'] = words[searchCondtionIndex]
+        context['searchWord'] = search
+        context['searchByUpdateDate'] = d
         return self.render_to_response(context)

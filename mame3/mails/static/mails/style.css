@@ -250,3 +250,7 @@ li a.active {
     color: white;
     background-color: #4CAF50;
 }
+.search-condition{
+  font-size: 20px;
+  color : magenta;
+}
