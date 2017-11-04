@@ -17,9 +17,6 @@ class Customer(models.Model):
     remark = models.CharField(max_length=200, blank=True)
     create_date = models.DateTimeField('date created customer', default=timezone.now)
 
-    #def toJSON(self):
-    #    return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-
 class Car(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     car_alphabet = models.CharField(max_length=10)
