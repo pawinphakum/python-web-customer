@@ -57,3 +57,7 @@ class CustomerCarForm(forms.Form):
 
 class SearchForm(forms.Form):
     search = forms.CharField(label='ค้นหา', help_text='เลขทะเบียน เช่น 246 , ชื่อลูกค้า เช่น สุชาติ , วันที่สร้าง เช่น 251061')
+
+class SmsForm(forms.Form):
+    month = forms.CharField(label='เดือน')
+    year = forms.CharField(label='ปี')

@@ -1,0 +1,24 @@
+{% load static %}
+{% load mails_extras %}
+{% load l10n %}
+{% include "mails/menu.html" with active_tab='C' %}
+<br>
+<form action="{% url 'mails:sms' %}" method="POST">
+  {% csrf_token %}
+  <div class="divLEFT">
+    <div class="divTable">
+      <br>
+      <div class="divTableRow">
+        <div class="divTableCell">&nbsp;</div>
+        <div class="divTableCell">{{ form.month.label }}</div>
+        <div class="divTableCell">{{ form.month }}</div>
+        <div class="divTableCell">&nbsp;</div>
+        <div class="divTableCell">{{ form.year.label }}</div>
+        <div class="divTableCell">{{ form.year }}</div>
+        <div class="divTableCell"><input type="submit" value=" โหลดไฟล์ " />
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</form>

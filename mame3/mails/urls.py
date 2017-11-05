@@ -6,7 +6,8 @@ app_name = 'mails'
 urlpatterns = [
     url(r'^$', views.CustomerCarView.as_view(), name='index'),
     url(r'^checkname$', views.checkname, name='checkname'),
-    url(r'^search$', views.SearchView.as_view(), name='search')
+    url(r'^search$', views.SearchView.as_view(), name='search'),
+    url(r'^sms$', views.SmsView.as_view(), name='sms'),
     # P<parameter_name>
     # ex: /polls/5/
     # url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),

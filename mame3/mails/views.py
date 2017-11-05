@@ -10,7 +10,7 @@ import datetime
 from django.core import serializers
 import json
 from .models import Customer, Car, MailHistory
-from .forms import CustomerCarForm, SearchForm
+from .forms import CustomerCarForm, SearchForm, SmsForm
 import re
 
 # Create your views here.
@@ -239,3 +239,8 @@ class SearchView(FormView):
         context['searchWord'] = search
         context['searchByUpdateDate'] = d
         return self.render_to_response(context)
+
+class SmsView(FormView):
+    template_name = 'mails/sms.html'
+    form_class = SmsForm
+    success_url = reverse_lazy('mails:sms')
